@@ -1,0 +1,41 @@
+https://docs.rust-embedded.org/book/intro/install/linux.html
+sudo apt-get install 
+sudo apt-get install build-essential gcc-arm-none-eabi binutils-arm-none-eabi openocd
+sudo apt-get install gdb-multiarch nemiver
+
+cargo --version
+rustc -V
+sudo rustup update
+rustup component add llvm-tools-stable
+rustup component add llvm-tools-preview
+rustup target add thumbv7em-none-eabihf
+
+cargo clean
+cargo build
+
+cargo readobj --bin minimal_project -- --file-headers
+cargo size --bin minimal_project --debug -- -A
+
+
+On-Chip-Debugger starten
+zuerst openocd.cfg bearbeiten
+  source [find interface/ti-icdi.cfg]
+  transport select hla_jtag
+  set WORKAREASIZE 0x8000
+  set CHIPNAME tm4c1294ncpdt
+  source [find target/stellaris.cfg]
+dann "openocd" aufrufen, openocd.cfg wird aus selben Verzeichnis geladen
+
+
+Debugging starten
+gdb-multiarch -q target/thumbv7em-none-eabihf/debug/minimal_project
+im gdb:
+(gdb) target remote :3333
+(gdb) load
+(gdb) monitor arm semihosting enable
+(gdb) break main
+(gdb) continue
+(gdb) next
+
+
+
