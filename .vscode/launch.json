@@ -1,0 +1,28 @@
+{
+    "name": "GDB remote",
+    "type": "cortex-debug",
+    "request": "launch",
+    "cwd": "${workspaceRoot}",
+    "target": "${workspaceRoot}minimal_project_vs.code_gdb/target/thumbv7em-none-eabihf/debug/minimal_project",
+    "gdbpath": "/usr/bin/gdb-multiarch",
+    "autorun": [
+        "target remote localhost:3333",
+        "monitor reset"
+    ],
+    "configurations": [
+        {
+            "cwd": "${workspaceRoot}/minimal_project_vs.code_gdb",
+            "executable": "./target/thumbv7em-none-eabihf/debug/minimal_project",
+            "name": "Debug with OpenOCD",
+            "request": "launch",
+            "type": "cortex-debug",
+            "servertype": "openocd",
+            "configFiles": [
+                "${workspaceRoot}/debugging_tiva_tm4c1294/openocd.cfg"
+            ],
+            "searchDir": [],
+            "runToEntryPoint": "main",
+            "showDevDebugOutput": "none"
+        }
+    ]
+}
