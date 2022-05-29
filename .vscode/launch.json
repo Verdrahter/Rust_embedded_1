@@ -13,6 +13,20 @@
             "searchDir": [],
             "runToEntryPoint": "main",
             "showDevDebugOutput": "none"
+        },
+        {
+            "cwd": "${workspaceRoot}/peripherals_1",
+            "executable": "./target/thumbv7em-none-eabihf/debug/peripherals_1",
+            "name": "Debug peripherals_1",
+            "request": "launch",
+            "type": "cortex-debug",
+            "servertype": "openocd",
+            "configFiles": [
+                "${workspaceRoot}/debugging_tiva_tm4c1294/openocd.cfg"
+            ],
+            "searchDir": [],
+            "runToEntryPoint": "main",
+            "showDevDebugOutput": "none"
         }
     ]
 }
