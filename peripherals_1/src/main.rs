@@ -52,23 +52,39 @@ fn main() -> ! {
     bits |= 0x03;
     p.GPIO_PORTJ_AHB.den.write(|w| unsafe{ w.bits(bits) });
 
+    // pull-up resistor
+    bits = p.GPIO_PORTJ_AHB.pur.read().bits();
+    bits |= 0x03;
+    p.GPIO_PORTJ_AHB.pur.write(|w| unsafe{ w.bits(bits) });
+
+    // ???
+    p.GPIO_PORTJ_AHB.pc.write(|w| unsafe{ w.bits(3) });
+
+    let mut lastsw1 = false;
+    let mut lastsw2 = false;
+    let mut outputmask = 0;
     loop {
         let bits = p.GPIO_PORTJ_AHB.data.read().bits(); 
         let sw1 = (bits & 0x01) != 0;
         let sw2 = (bits & 0x02) != 0;
 
-        if sw1 && sw2 {
-            p.GPIO_PORTN.data.write(|w| unsafe{w.bits(0x02)});
+        
+        if sw1 {
+            if !lastsw1 {
+                outputmask += 1;
+            }
         }
-        else if sw1 {
-            p.GPIO_PORTN.data.write(|w| unsafe{w.bits(0x01)});
-        }
-        else if sw2 {
-            p.GPIO_PORTF_AHB.data.write(|w| unsafe{w.bits(0x10)});
-        }
-        else {
-            p.GPIO_PORTF_AHB.data.write(|w| unsafe{w.bits(0x01)});
+        lastsw1 = sw1;
 
+        if sw2 {
+            if !lastsw2 {
+                outputmask |= 0x04;
+                outputmask -= 1;
+            }
         }
+        lastsw2 = sw2;
+
+        outputmask &= 0x03;
+        p.GPIO_PORTN.data.write(|w| unsafe{w.bits(outputmask)});
     }
 }
